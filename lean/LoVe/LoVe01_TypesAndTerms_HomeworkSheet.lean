@@ -63,7 +63,7 @@ follow the procedure described in the Hitchhiker's Guide.
 Note: Peirce is pronounced like the English word "purse". -/
 
 def weakPeirce : ((((α → β) → α) → α) → β) → β :=
-  sorry
+  fun x ↦  x (fun y ↦ y (fun n ↦ x (fun y ↦ n)))
 
 /- ## Question 2: Typing Derivation
 
