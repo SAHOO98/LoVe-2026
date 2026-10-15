@@ -25,8 +25,9 @@ its argument, or 0 if the argument is 0. For example:
     `pred 7 = 6`
     `pred 0 = 0` -/
 
-def pred : ℕ → ℕ :=
-  sorry
+def pred : ℕ → ℕ
+  | Nat.zero => Nat.zero
+  | Nat.succ n  => n
 
 /- 1.2. Check that your function works as expected. -/
 
