@@ -28,16 +28,18 @@ Hint: Some strategies for carrying out such proofs are described at the end of
 Section 3.3 in the Hitchhiker's Guide. -/
 
 theorem I (a : Prop) :
-    a → a :=
-  sorry
+    a → a :=by
+  intro h
+  exact h
 
 theorem K (a b : Prop) :
-    a → b → b :=
-  sorry
+    a → b → b :=by
+  intro ha hb
+  exact hb
 
 theorem C (a b c : Prop) :
     (a → b → c) → b → a → c :=
-  sorry
+  λ x y z => x z y
 
 theorem proj_fst (a : Prop) :
     a → a → a :=
@@ -47,17 +49,19 @@ theorem proj_fst (a : Prop) :
 
 theorem proj_snd (a : Prop) :
     a → a → a :=
-  sorry
+  λ x y=> x
 
 theorem some_nonsense (a b c : Prop) :
-    (a → b → c) → a → (a → c) → b → c :=
-  sorry
+    (a → b → c) → a → (a → c) → b → c :=by
+    intro ha hb hc hd
+    exact hc hb
 
 /- 1.2. Prove the contraposition rule using basic tactics. -/
 
 theorem contrapositive (a b : Prop) :
-    (a → b) → ¬ b → ¬ a :=
-  sorry
+    (a → b) → ¬ b → ¬ a := by
+    intro hx hy hz
+    exact hy (hx hz)
 
 /- 1.3. Prove the distributivity of `∀` over `∧` using basic tactics.
 
@@ -66,8 +70,12 @@ forward reasoning, like in the proof of `and_swap_braces` in the lecture, might
 be necessary. -/
 
 theorem forall_and {α : Type} (p q : α → Prop) :
-    (∀x, p x ∧ q x) ↔ (∀x, p x) ∧ (∀x, q x) :=
-  sorry
+    (∀x, p x ∧ q x) ↔ (∀x, p x) ∧ (∀x, q x) := by
+    apply Iff.intro
+    . intro h1
+      exact ⟨λ x=> (h1 x).1,  λ x=> (h1 x).2⟩
+    . intro h1
+      exact λ x => ⟨ h1.1 x, h1.2 x⟩
 
 
 /- ## Question 2: Natural Numbers
@@ -78,8 +86,10 @@ theorem forall_and {α : Type} (p q : α → Prop) :
 #check mul
 
 theorem mul_zero (n : ℕ) :
-    mul 0 n = 0 :=
-  sorry
+    mul 0 n = 0 := by
+    induction n with
+    |zero  => simp[mul]
+    |succ n  ih => simp[mul]; rw[add_zero, ih]
 
 #check add_succ
 theorem mul_succ (m n : ℕ) :
@@ -131,22 +141,47 @@ Hint: You will need `Or.elim` and `False.elim`. You can use
 and similarly for `Peirce`. -/
 
 theorem Peirce_of_EM :
-    ExcludedMiddle → Peirce :=
-  sorry
+    ExcludedMiddle → Peirce :=by
+    rw[ExcludedMiddle]
+    rw[Peirce]
+    intro ha a b
+    apply Or.elim (ha a)
+    . intro hb hc; exact hb
+    . intro hb hc
+      apply hc
+      intro hd
+      exact False.elim (hb hd)
 
 /- 3.2 (**optional**). Prove the following implication using tactics. -/
 
 theorem DN_of_Peirce :
-    Peirce → DoubleNegation :=
-  sorry
+    Peirce → DoubleNegation := by
+    rw[DoubleNegation]
+    rw[Peirce]
+    intro ha a
+    intro hb
+    apply (ha a False)
+    intro hc
+    apply False.elim
+    exact (hb hc)
 
 /- We leave the remaining implication for the homework: -/
 
 namespace SorryTheorems
 
 theorem EM_of_DN :
-    DoubleNegation → ExcludedMiddle :=
-  sorry
+    DoubleNegation → ExcludedMiddle := by
+  rw[DoubleNegation]
+  rw[ExcludedMiddle]
+  intro hb a
+  apply hb
+  intro hc
+  have h : ¬ a:= by
+    intro ha
+    have h1: a ∨ ¬a:= Or.inl ha
+    exact hc h1
+  apply hc
+  apply Or.inr h
 
 end SorryTheorems
 

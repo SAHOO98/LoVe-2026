@@ -162,12 +162,10 @@ Introduction rules: -/
 theorem And_swap (a b : Prop) :
     a ∧ b → b ∧ a :=
   by
-    intro hab
+    intro h
     apply And.intro
-    apply And.right
-    exact hab
-    apply And.left
-    exact hab
+    exact h.2
+    exact h.1
 
 /- The above proof step by step:
 
@@ -187,9 +185,8 @@ theorem And_swap_braces :
   by
     intro a b hab
     apply And.intro
-    · exact And.right hab
-    · exact And.left hab
-
+    · exact hab.2
+    · exact hab.1
 /- Notice above how we pass the hypothesis `hab` directly to the theorems
 `And.right` and `And.left`, instead of waiting for the theorems' assumptions to
 appear as new subgoals. This is a small forward step in an otherwise backward
@@ -228,6 +225,7 @@ theorem Not_Not_intro (a : Prop) :
 theorem Exists_double_iden :
     ∃n : ℕ, double n = n :=
   by
+    unfold double
     apply Exists.intro 0
     rfl
 

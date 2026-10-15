@@ -23,8 +23,9 @@ namespace LoVe
 list. Your function should be defined by recursion and not using `++`
 (`List.append`). -/
 
-def snoc {α : Type} : List α → α → List α :=
-  sorry
+def snoc {α : Type} : List α → α → List α
+| [] , a => [a]
+| x::xs , a => x :: snoc xs a
 
 /- 1.2. Convince yourself that your definition of `snoc` works by testing it on
 a few examples. -/
@@ -39,8 +40,10 @@ a few examples. -/
 
 Hint: There should be three cases. -/
 
-def minusTwo : ℕ → ℕ :=
-  sorry
+def minusTwo : ℕ → ℕ
+  | 0 => 0
+  | 1 => 1
+  | n+2 => n
 
 /- 2.2. Convince yourself that your definition of `minusTwo` works by testing
 it on a few examples. -/
@@ -54,8 +57,7 @@ it on a few examples. -/
 3.1. Define a `sum` function that computes the sum of all the numbers in a
 list. -/
 
-def sum : List ℕ → ℕ :=
-  sorry
+def sum : List ℕ → ℕ := List.foldl (λ x y => x+y ) 0
 
 #eval sum [1, 12, 3]   -- expected: 16
 
