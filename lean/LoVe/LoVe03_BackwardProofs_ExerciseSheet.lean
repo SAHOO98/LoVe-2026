@@ -169,6 +169,22 @@ theorem DN_of_Peirce :
 
 namespace SorryTheorems
 
+theorem helper2 {a:Prop} (h: ¬(a∨¬a)): a ∨ ¬a:=by
+  apply Or.inr
+  intro ha
+  apply h
+  apply Or.inl
+  apply ha
+
+theorem helper1: ∀ a:Prop, ¬¬(a ∨ ¬a):=
+  (λ a ha => ha (Or.inr (λ hb => ha (Or.inl hb))))
+
+theorem EM_of_DN_0: DoubleNegation → ExcludedMiddle := by
+  rw[DoubleNegation]
+  rw[ExcludedMiddle]
+  intro h1 a
+  exact h1 (a ∨ ¬a) (helper1 a)
+
 theorem EM_of_DN :
     DoubleNegation → ExcludedMiddle := by
   rw[DoubleNegation]

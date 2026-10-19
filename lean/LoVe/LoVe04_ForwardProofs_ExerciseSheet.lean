@@ -21,7 +21,9 @@ namespace LoVe
 
 theorem I (a : Prop) :
     a → a :=
-  sorry
+    assume h: a
+    show a from
+      h
 
 theorem K (a b : Prop) :
     a → b → b :=
@@ -55,15 +57,34 @@ theorem contrapositive (a b : Prop) :
 
 theorem forall_and {α : Type} (p q : α → Prop) :
     (∀x, p x ∧ q x) ↔ (∀x, p x) ∧ (∀x, q x) :=
-  sorry
+    Iff.intro (
+      assume h : ∀x, p x ∧ q x
+      have h1: ∀x, p x := fun x => (h x).1
+      have h2: ∀x, q x := fun x => (h x).2
+      show (∀x, p x) ∧ (∀x, q x) from
+        And.intro h1 h2
+    )
+    (
+      assume h: (∀x, p x) ∧ (∀x, q x)
+      have h1 : ∀ x, p x ∧ q x := (fun x => And.intro (h.1 x) (h.2 x))
+      show (∀x, p x ∧ q x) from
+        h1
+    )
 
 /- 1.4 (**optional**). Supply a structured proof of the following property,
 which can be used to pull a `∀` quantifier past an `∃` quantifier. -/
 
+theorem forall_exists_of_exists_forall_direct_term {α : Type} (p : α → α → Prop) :
+    (∃x, ∀y, p x y) → (∀y, ∃x, p x y) :=
+  fun ⟨ x, hx ⟩  => (fun y => Exists.intro x (hx y))
+
 theorem forall_exists_of_exists_forall {α : Type} (p : α → α → Prop) :
     (∃x, ∀y, p x y) → (∀y, ∃x, p x y) :=
-  sorry
-
+    assume h: ∃x, ∀y, p x y
+    show (∀y, ∃x, p x y) from
+    Exists.elim h (
+      fun a =>(fun h1=> fun y=> Exists.intro a (h1 y) )
+    )
 
 /- ## Question 2: Chain of Equalities
 

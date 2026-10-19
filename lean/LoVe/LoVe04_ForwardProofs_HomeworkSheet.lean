@@ -90,7 +90,18 @@ for `∃`, `∧`, and `↔`. -/
 
 theorem And_comm_under_Exists {α : Type} (p q : α → Prop) :
     (∃x, p x ∧ q x) ↔ (∃x, q x ∧ p x) :=
-  sorry
+    Iff.intro (
+      assume h0:∃x, p x ∧ q x
+      have h1:∃x, q x ∧ p x := Exists.elim h0 (fun x h=> Exists.intro x (And.intro h.2 h.1))
+      show _ from
+      h1
+    ) (
+     assume h0:∃x, q x ∧ p x
+      have h1:∃x, p x ∧ q x := Exists.elim h0 (fun x h=> Exists.intro x (And.intro h.2 h.1))
+      show _ from
+      h1
+    )
+
 
 /- 3.2. Supply a structured proof of the commutativity of `∨` under a `∀`
 quantifier, using no other theorems than the introduction and elimination rules

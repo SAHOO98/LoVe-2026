@@ -86,7 +86,7 @@ Hints:
 
 theorem about_Impl (a b : Prop) :
     ¬ a ∨ b → a → b :=
-  sorry
+    λ h ha => (Or.elim h (λ hb => False.elim (hb ha)) (λ hb => hb))
 
 /- 2.3. Prove the missing link in our chain of classical axiom implications.
 
